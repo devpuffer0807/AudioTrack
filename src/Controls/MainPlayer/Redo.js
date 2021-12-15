@@ -6,6 +6,8 @@ export default () => {
     const { config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue } = useContext(PlayerContext)
 
     const handler = () => {
+        if (config.headIsMoving)
+            return;
         if (futureQueue.length > 0) {
             switch (futureQueue.at(-1)[0].type) {
                 case "config":
