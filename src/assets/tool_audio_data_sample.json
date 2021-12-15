@@ -1,0 +1,164 @@
+{
+	"name": "My wonderful project name",
+	"description": "Project description, my first project, great stuff!",
+	"config": {
+	  "autosave": 3,
+	  "loop": {
+	    "enabled": false,
+	    "start": 3.456,
+	    "end": 29.677
+	  },
+	  "snap": true,
+	  "grid": 10,
+	  "zoom": 5,
+	  "cursor": 5.000
+	},
+	"tracks": [
+	  {
+	    "name": "track 1 - drums",
+	    "description": "my track description, this is the drums track.",
+		"params": {
+	      "in": "realtek audio in",
+	      "gain": -2,
+	      "pan": 0,
+	      "solo": false,
+	      "mute": false,
+	      "rec": true,
+	      "frozen": true
+	    },
+	    "samples": [
+	      {
+  	      "filename": "16_beat_blues.mp3",
+  	      "type": 1,
+  	      "url": "audio/piano-1.mp3",
+  	      "fullLength": 372,
+  	      "mime": "audio/mpeg",
+  	      "position": 1.200,
+  	      "start": 80.400,
+  	      "end": 133.000
+  	    },
+	      {
+  	      "filename": "recording1.mp3",
+  	      "type": 1,
+  	      "url": "audio/guitar-1.mp3",
+  	      "fullLength": 405,
+  	      "mime": "audio/mpeg",
+  	      "position": 13.300,
+  	      "start": 0,
+  	      "end": 80.153
+  	    }
+	    ],
+	    "effects": [
+	      {
+	        "name": "My effect name",
+	        "description": "I thought to add a reverb, because I like it :-P",
+			"params": {
+    	      "volume": 45,
+    	      "solo": false,
+    	      "mute": false,
+    	      "rec": true
+    	    },
+    	    "effect": {
+    	      "type": "reverb",
+    	      "params": {
+    	        "type": "church-hall",
+    	        "impulse_file": "my_chruch_cathedral.mp3",
+    	        "room_size": 4,
+    	        "pre-delay": 12,
+    	        "decay": 120,
+    	        "lowFreq": "100Hz",
+    	        "hiFreq": "4.5kHz",
+    	        "gate": "2.5kHz"
+    	      }
+    	    },
+    	    "automations": [
+    	      {
+    	        "param": "volume",
+    	        "points": [
+    	          {
+    	            "time": 0,
+    	            "value": 0
+    	          },
+    	          {
+    	            "time": 3.400,
+    	            "value": 0
+    	          },
+    	          {
+    	            "time": 5.000,
+    	            "value": 40
+    	          },
+    	          {
+    	            "time": 8.250,
+    	            "value": 60
+    	          },
+    	          {
+    	            "time": 120.100,
+    	            "value": 60
+    	          },
+    	          {
+    	            "time": 130.000,
+    	            "value": 10
+    	          }
+    	        ]
+    	      }
+    	    ]
+	      },
+	      {
+	        "name": "My Volume control",
+	        "description": "simply the volume control",
+			"params": {
+    	      "volume": 45,
+    	      "solo": false,
+    	      "mute": false,
+    	      "rec": true
+    	    },
+    	    "effect": {
+    	      "type": "volume",
+    	      "params": {}
+    	    },
+    	    "automations": [
+    	      {
+    	        "param": "volume",
+    	        "points": [
+    	          {
+    	            "time": 0,
+    	            "value": 80
+    	          },
+    	          {
+    	            "time": 240.400,
+    	            "value": 80
+    	          },
+    	          {
+    	            "time": 240.450,
+    	            "value": 79
+    	          },
+    	          {
+    	            "time": 240.455,
+    	            "value": 78
+    	          },
+    	          {
+    	            "time": 240.457,
+    	            "value": 77
+    	          },
+    	          {
+    	            "time": 240.460,
+    	            "value": 70
+    	          },
+    	          {
+    	            "time": 241.000,
+    	            "value": 0
+    	          }
+    	        ]
+    	      }
+    	    ]
+	      }
+	    ],
+	    "frozen": {
+	      "filename": "track_1_-_drums.mp3",
+	      "url": "https://mybrand.com/media/user12/track_1_-_drums.mp3",
+	      "length": 245.399,
+	      "mime": "audio/mpeg"
+	    }
+	  }
+	]
+}

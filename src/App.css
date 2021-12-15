@@ -1,0 +1,415 @@
+:root {
+    --background: #f3f4f6;
+    --border: 1px solid #4b5563;
+    --border-color: #4b5563;
+}
+
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 0 1em;
+    font-family: sans-serif;
+    background-color: var(--background);
+}
+.audio-player-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    border-bottom: var(--border);
+}
+.tabs button {
+    display: flex;
+    padding: 0.5em 4em;
+    cursor: pointer;
+    background: var(--border-color);
+    color: #f9fafb;
+    border: var(--border);
+    margin: 0 1em -1px;
+}
+.tabs button.active {
+    background: #ffffff;
+    color: var(--border-color);
+    border-bottom: 1px solid #ffffff;
+    font-weight: bold;
+}
+.react-audio-player {
+    display: block;
+    margin: auto;
+}
+.player-container {
+    display: flex;
+    align-items: stretch;
+    margin-top: 2em;
+}
+.audioWavesContainer {
+    position: absolute;
+    display: flex;
+    left: 0;
+}
+.waveform {
+    height: 100px;
+    border-radius: 10px;
+}
+.waveform-container {
+    max-width: 100%;
+    /* width: 800px; */
+    height: 100%;
+}
+.play-btn,
+.pause-btn {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin: auto;
+}
+.uploader-container {
+    display: flex;
+    justify-content: space-between;
+}
+.uploader-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.track-container {
+    width: 240px;
+}
+.track-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+    font-size: 12px;
+}
+.waveform-volume-controls {
+    display: flex;
+    flex-direction: column;
+}
+.waveform-volume-slider {
+    display: flex;
+    height: 100%;
+    margin: 15% auto;
+}
+.waveform-volume-slider .MuiSlider-valueLabel {
+    top: 3.5px !important;
+    left: calc(-50% + 25px) !important;
+}
+.waveform-volume-slider .MuiSlider-valueLabel > span {
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 0 50% 50% 50% !important;
+    font-size: 0.9em !important;
+}
+.mute-btn,
+.unmute-btn {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+    cursor: pointer;
+}
+/* --------------- */
+.timeline-container {
+    margin-top: 3em;
+}
+.timeline-controls-container {
+    display: flex;
+}
+.timelineScrollContainer {
+    width: auto;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+.trackline {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(to right, #d1d5db 1px, transparent 1px),
+        linear-gradient(to bottom, #d1d5db 1px, transparent 1px);
+}
+.tracklines > div:last-child {
+    border-bottom: 1px solid #d1d5db;
+}
+.time-tracker {
+    display: flex;
+    background-repeat: repeat-x;
+    background-position: left bottom;
+    background-image: linear-gradient(to right, #d1d5db 1px, transparent 1px),
+        linear-gradient(to top, #d1d5db 1px, transparent 1px);
+    pointer-events: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+}
+.time-tracker,
+.tmp_tracker {
+    margin-bottom: 1em;
+}
+.time-tracker .time-value {
+    padding: 6px 0 0 6px;
+    font-size: 0.8em;
+    color: #4b5563;
+}
+.controls-container .control-track {
+    border: 1px solid #d1d5db;
+    border-bottom: 0;
+}
+.controls-container {
+    margin-right: 0.3em;
+}
+.controls-container > div:last-child {
+    border-bottom: 1px solid #d1d5db;
+}
+.zoom-container {
+    display: flex;
+    justify-content: flex-end;
+}
+.snap-setting,
+.zoom-setting,
+.zoom-in,
+.zoom-out {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: #4b5563;
+}
+.snap-setting:hover,
+.zoom-setting:hover,
+.zoom-in:hover,
+.zoom-out:hover {
+    color: #111827;
+}
+.disabled.snap-setting,
+.disabled.zoom-setting,
+.disabled.zoom-in,
+.disabled.zoom-out,
+.disabled.snap-setting:hover,
+.disabled.zoom-setting:hover,
+.disabled.zoom-in:hover,
+.disabled.zoom-out:hover {
+    color: #9CA3AF
+}
+.zoom-setting-container {
+    position: relative;
+}
+.snap-setting,
+.zoom-setting {
+    margin: 0 10px;
+    padding: 2px;
+}
+.zoom-setting-bar {
+    position: absolute;
+    left: -50px;
+    z-index: 1;
+}
+
+.zoom-setting-bar ul{
+    width: 150px;
+}
+ul {
+    margin: 0;
+    padding: 10px 0;
+    /*width: 150px;*/
+    background-color: #ffffff;
+    list-style: none;
+    border-radius: 10px;
+}
+ul li{
+    padding: 5px 10px;
+    cursor: pointer;
+}
+ul li:hover {
+    background-color: #d1d5db;
+}
+.playHead-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.playHead-top-line {
+    width: 100%;
+    cursor: pointer;
+}
+.playHead {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    will-change: transform;
+    z-index: 1;
+}
+.playHead .playHead-top{
+    background-color: #3B82F6;
+    cursor: pointer;
+}
+.playHead .playHead-head-arrow{
+    border-style: solid;
+    border-color: #3B82F6 transparent transparent transparent;
+    border-bottom: none !important;
+    cursor: pointer;
+}
+.playHead .playHead-line{
+    width: 2px;
+    height: 100%;
+    background-color: #3B82F6;
+    margin: auto;
+}
+.main-player {
+    display: flex;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 50px;
+}
+.icon-btn {
+    width: 50px;
+    height: 50px;
+    padding: 15px;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    color: #4b5563;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+.main-player-record{
+    color: #DC2626;
+}
+.audioWavesDraggable {
+    position: absolute;
+    top: 0;
+    /* cursor: pointer; */
+}
+.dragging .waveform {
+    /* opacity: 0; */
+}
+.audioWavesDraggable.react-draggable-dragging {
+    z-index: 50;
+}
+.main-player-name input{
+    height: 50px;
+    outline: none;
+    border: none;
+    font-family: "Times New Roman", sans-serif;
+    font-size: 16px;
+}
+.main-player-load, .main-player-save{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main-player-load input, .main-player-save input {
+    border-radius: 10px;
+    border: none;
+    margin: 0 5px;
+    color: white;
+    font-weight: bold;
+    font-family: "Times New Roman", sans-serif;
+    cursor: pointer;
+}
+.main-player-load input {
+    background-color: cyan;
+}
+.main-player-save input {
+    background-color: greenyellow;
+}
+
+.main-player-volume input[type=range] {
+    height: 50px;
+    outline: none;
+}
+
+.icon-btn-audio {
+    width: 50px;
+    height: 50px;
+    padding: 15px;
+    cursor: pointer;
+    color: #4b5563;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+.icon-btn-undo, .icon-btn-redo {
+    width: 30px;
+    height: 50px;
+    padding: 15px 0;
+    cursor: pointer;
+    color: #4b5563;
+    margin: 0 5px;
+}
+.icon-btn-undo {
+    margin-left: 50px;
+}
+.icon-btn-redo {
+    margin-right: 50px;
+}
+
+.display-none {
+    display: none;
+}
+
+.import-from-server {
+}
+.import-from-server input {
+    display: block;
+    padding: 5px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border: none;
+    font-size: 16px;
+}
+
+.control-track input {
+    border: none;
+    outline: none;
+    border-bottom: 1px dotted var(--border-color);
+    padding-left: 5px;
+    background-color: var(--background);
+}
+.track-gain {
+    display: flex;
+    justify-content: space-between;
+}
+.track-gain input {
+    width: 25px;
+    margin: 5px;
+    outline: none;
+}
+
+.ReactModal__Overlay {
+    z-index: 1000;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.track-solo-mute {
+    display: flex;
+    justify-content: right;
+}
+
+.track-solo-mute input[type=button] {
+    background-color: #d2d2d2;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+}
