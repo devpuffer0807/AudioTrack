@@ -5,7 +5,6 @@ import Json from '../assets/tool_audio_data_sample.json'
 const PlayerContext = createContext()
 
 const PlayerContextProvider = ({ children }) => {
-
     const [tracks, setTracks] = useState([])
     const [config, setConfig] = useState({})
     const [pastQueue, setPastQueue] = useState([])
@@ -50,7 +49,7 @@ const PlayerContextProvider = ({ children }) => {
             snap: Json.config.snap,
             solo: solo,
             mute: false,
-            volume: 1.0,
+            volume: 0.5,
             historyFlag: true
         })
     }, [])

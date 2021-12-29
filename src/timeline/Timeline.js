@@ -16,7 +16,7 @@ export default () => {
     const timelineScrollContainerElem = useRef()
 
     useEffect(() => {
-        console.log(tracks)
+        //console.log(tracks)
     })
 
     return (

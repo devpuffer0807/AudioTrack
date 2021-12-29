@@ -1,5 +1,6 @@
 import React, { useContext, useCallback, useMemo, useState } from 'react'
 import { PlayerContext } from '../../Context/PlayerContext'
+import { updateCurrentAudioTime } from '../../States/States'
 
 export default () => {
 
@@ -9,11 +10,13 @@ export default () => {
         if(config.headIsMoving)
             return ;
         if (pastQueue.length > 0) {
+            // console.log("==========", futureQueue, pastQueue)
             switch (pastQueue.at(-1)[0].type) {
                 case "config":
                     setConfig(pastQueue.at(-1)[0])
-                    setPastQueue(pastQueue.slice(0, -1))
                     setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
+                    setPastQueue(pastQueue.slice(0, -1))
+                    updateCurrentAudioTime(tracks, pastQueue.at(-1)[0].currentPlayTime, false)
                     break;
                 case "tracks":
                     setTracks(pastQueue.at(-1))

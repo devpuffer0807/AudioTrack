@@ -7,7 +7,7 @@ import { playHeadTopStyle } from '../timeline/timelineStyle'
 import positionToTime from '../helpers/positionToTime'
 
 export default ({ timelineScrollContainerElem }) => {
-    const { tracks, config, setConfig } = useContext(PlayerContext)
+    const { tracks, config, setConfig, pastQueue, setPastQueue } = useContext(PlayerContext)
     const { secondsPerBox, currentPlayTime, headIsMoving } = config
     const { timelineBoxSize } = timelineConfig
     const arrowWidth = 10
@@ -16,7 +16,7 @@ export default ({ timelineScrollContainerElem }) => {
     const secondsRefreshValue = secondsPerBox / 100
     useInterval(() => {
         if (!mouseDrag && headIsMoving) {
-            console.log(secondsRefreshValue)
+            // console.log(secondsRefreshValue)
             setConfig({
                 ...config,
                 currentPlayTime: currentPlayTime + secondsRefreshValue,
@@ -35,6 +35,11 @@ export default ({ timelineScrollContainerElem }) => {
             container: timelineScrollContainerElem,
             config: config,
         })
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         setConfig({
             ...config,
             currentPlayTime: time,
@@ -48,7 +53,10 @@ export default ({ timelineScrollContainerElem }) => {
     }
 
     const onMouseUpHandler = (e) => {
-        setMouseDrag(false)
+        if (mouseDrag) {
+            setMouseDrag(false)
+        }
+        // setMouseDrag(true)
     }
 
     const onMouseLeaveHandler = (e) => {
@@ -94,7 +102,7 @@ export default ({ timelineScrollContainerElem }) => {
                 style={styles.playHead}
                 className="playHead"
                 onMouseDown={onMouseDownHandler}
-                // onMouseUp={onMouseUpHandler}
+                onMouseUp={onMouseUpHandler}
                 // onMouseLeave={onMouseLeaveHandler}
                 // onMouseMove={onMouseMoveHandler}
                 onDrag={onMouseDragHandler}
