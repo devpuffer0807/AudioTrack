@@ -38,7 +38,6 @@ export const Track = ({id, color, name, params, audioFiles}) => {
 }
 
 export const updateAudio = (tracks, audioObj) => {
-  // console.log("currentObj", audioObj);
   let newAudioFileObj = null
   let newTracksObj = tracks.map((track) => {
     return {

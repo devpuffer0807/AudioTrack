@@ -1,6 +1,7 @@
 import React, { useContext, useCallback, useMemo, useState } from 'react'
 import { PlayerContext } from '../../Context/PlayerContext'
-import { updateCurrentAudioTime } from '../../States/States'
+import { updateCurrentAudioTime, updateWaveFormWidth } from '../../States/States'
+
 
 export default () => {
 
@@ -17,11 +18,24 @@ export default () => {
                     setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     setPastQueue(pastQueue.slice(0, -1))
                     updateCurrentAudioTime(tracks, pastQueue.at(-1)[0].currentPlayTime, false)
+                    setTracks(
+                        updateWaveFormWidth(tracks, pastQueue.at(-1)[0].secondsPerBox)
+                    )
                     break;
                 case "tracks":
                     setTracks(pastQueue.at(-1))
                     setPastQueue(pastQueue.slice(0, -1))
                     setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
+                    break;
+                case "tracksconfig":
+                    setTracks(pastQueue.at(-1))
+                    setPastQueue(pastQueue.slice(0, -1))
+                    setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
+                    setConfig({
+                        ...pastQueue.at(-1)[0].config,
+                        headIsMoving: false,
+                    })
+                    updateCurrentAudioTime(tracks, pastQueue.at(-1)[0].config.currentPlayTime, pastQueue.at(-1)[0].config.headIsMoving)
                     break;
                 default:
 

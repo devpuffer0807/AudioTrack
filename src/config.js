@@ -1,6 +1,6 @@
 export const timelineConfig = {
     timelineBoxSize: 80,//px
-    timelineMinBoxNumbers: 20,
+    timelineMinBoxNumbers: 50,
 }
 
 export const playerConfig = {

@@ -18,7 +18,7 @@ import Load from './Load'
 import Save from './Save'
 
 export default () => {
-    const { config, setConfig, tracks, setTracks } = useContext(PlayerContext)
+    const { config, setConfig, tracks, setTracks, pastQueue, setPastQueue } = useContext(PlayerContext)
 
     const playHandler = () => {
         setConfig({
@@ -33,8 +33,26 @@ export default () => {
             headIsMoving: false,
         })
     }
+    const stopHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
+        setConfig({
+            ...config,
+            headIsMoving: false,
+            currentPlayTime: 0,
+        })
+        updateCurrentAudioTime(tracks, 0, false)
+    }
 
     const muteHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         setConfig({
             ...config,
             mute: true
@@ -42,6 +60,11 @@ export default () => {
     }
 
     const unmuteHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         setConfig({
             ...config,
             mute: false,
@@ -49,6 +72,11 @@ export default () => {
     }
 
     const backwardHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         let time = Math.max(0, config.currentPlayTime - config.secondsPerBox)
         setConfig({
             ...config,
@@ -58,6 +86,11 @@ export default () => {
     }
 
     const forwardHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         let time = Math.min(timelineConfig.timelineMinBoxNumbers * config.secondsPerBox, config.currentPlayTime + config.secondsPerBox)
         setConfig({
             ...config,
@@ -90,7 +123,7 @@ export default () => {
             {config.mute && <AudioMuteBtn unmuteHandler={unmuteHandler} />}
             <AudioVolume />
             <RecordBtn />
-            <StopBtn />
+            <StopBtn stopHandler={stopHandler}/>
             <FastForwardLeftBtn backwardHandler={backwardHandler} />
             {!config.headIsMoving && <PlayBtn playHandler={playHandler} />}
             {config.headIsMoving && <PauseBtn pauseHandler={pauseHandler} />}

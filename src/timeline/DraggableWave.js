@@ -13,7 +13,7 @@ export default ({
                     tracksCount,
                     tracklinesContainerElem,
                 }) => {
-    const {tracks, setTracks, config, setConfig} = useContext(PlayerContext)
+    const {tracks, setTracks, config, setConfig, pastQueue, setPastQueue} = useContext(PlayerContext)
     const {id, start_at, waveformWidth, duration, audioElement, audioBufferRaw} = audioFile
     const {secondsPerBox, headIsMoving} = config
     const {timelineBoxSize} = timelineConfig
@@ -95,18 +95,19 @@ export default ({
         }
         const move_by_index = Math.round(node.y / timelineBoxSize)
         const calculated_start_at = config.snap ? Math.round(node.x / timelineBoxSize) * secondsPerBox : (node.x / timelineBoxSize) * secondsPerBox
-
         if (node.y === 0 || move_by_index === 0) {
             // keep audio in same track and update start_at
             const upAudio = updateAudio(tracks, {
                 id: id,
                 start_at: calculated_start_at,
             })
+            let tempTracks = [tracks];
+            tempTracks[0][0].type = "tracks"
+            setPastQueue([...pastQueue, ...tempTracks])
             setTracks(upAudio)
             return false
         }
         // switch track-line & update start_at
-
         setTracks(
             moveAudioToOtherTrack(
                 tracks,

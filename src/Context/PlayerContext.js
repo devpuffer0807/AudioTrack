@@ -43,7 +43,7 @@ const PlayerContextProvider = ({ children }) => {
             secondsPerBox: Json.config.grid,
             zoomBy: Json.config.zoom,
             maxZoom: 60 * 10,
-            minZoom: 5,
+            minZoom: 2,
             currentPlayTime: 5,
             headIsMoving: false,
             snap: Json.config.snap,

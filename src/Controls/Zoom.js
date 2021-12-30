@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { PlayerContext } from '../Context/PlayerContext'
 import { updateWaveFormWidth } from '../States/States'
 
 export default () => {
-    const {tracks, setTracks, config, setConfig} = useContext(PlayerContext)
+    const {tracks, setTracks, config, setConfig, pastQueue, setPastQueue} = useContext(PlayerContext)
     const {secondsPerBox, zoomBy, maxZoom, minZoom, headIsMoving} = config
-
+    const {zoomFlag, setZoomFlag} = useState(false)
     const zooms = [
+        // {step: 1, text: '1 seconds'},
         {step: 2, text: '2 seconds'},
         {step: 5, text: '5 seconds'},
         {step: 10, text: '10 seconds'},
@@ -18,6 +19,11 @@ export default () => {
     ]
 
     const zoomOutHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         setTracks(
             updateWaveFormWidth(tracks, secondsPerBox + zoomBy)
         )
@@ -29,6 +35,11 @@ export default () => {
     }
 
     const zoomInHandler = () => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         if ((secondsPerBox - zoomBy) >= minZoom) {
             setTracks(
                 updateWaveFormWidth(tracks, secondsPerBox - zoomBy)
@@ -50,10 +61,21 @@ export default () => {
     }
 
     const stepHandler = ($event) => {
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
+        let tmpSecondPerBox = $event.target.value
+        setTracks(
+            updateWaveFormWidth(tracks, tmpSecondPerBox)
+        )
         setConfig({
             ...config,
-            zoomBy: parseInt($event.target.value)
+            secondsPerBox: tmpSecondPerBox,
+            headIsMoving: false,
         })
+        document.getElementById('zoomSettingBar').classList.add('display-none')
     }
 
     const snapHandler = () => {
@@ -101,10 +123,11 @@ export default () => {
                 <div id="zoomSettingBar" className="zoom-setting-bar display-none">
                     <ul>
                         {zooms.map(zoom => (
-                            <li key={zoom.step}>
+                            <li key={zoom.step} >
+                            <label>
                                 <input type="radio" name="zoomBy" value={zoom.step} onClick={stepHandler}
-                                       defaultChecked={config.zoomBy === zoom.step}/>
-                                <span>{zoom.text}</span>
+                                       defaultChecked={config.zoomBy === zoom.step}/>{zoom.text}
+                            </label>
                             </li>
                         ))}
                     </ul>

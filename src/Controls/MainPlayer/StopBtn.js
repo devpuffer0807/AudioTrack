@@ -1,6 +1,6 @@
-export default () => {
+export default ({ stopHandler }) => {
     return (
-        <div className="main-player-stop icon-btn">
+        <div className="main-player-stop icon-btn" onClick={stopHandler}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 47.604 47.604"

@@ -24,12 +24,13 @@ export default ({ audioFile, color, trackIndex }) => {
         start_at,
         waveformWidth,
     } = audioFile
-    const { tracks, setTracks, config } = useContext(PlayerContext)
+    const { tracks, setTracks, config, setConfig } = useContext(PlayerContext)
     const { currentPlayTime, headIsMoving, secondsPerBox } = config
     const [audioBuffer, setAudioBuffer] = useState(new ArrayBuffer(0))
     const [audioProgress, setAudioProgress] = useState(0)
     const [blobUrl, setBlobUrl] = useState(null)
     const [decodedBuffer, setDecodedBuffer] = useState([])
+    const [countTimeLine, setCountTimeLine] = useState(0)
     let rap = React.createRef()
 
     useEffect(() => {
@@ -63,7 +64,6 @@ export default ({ audioFile, color, trackIndex }) => {
         const gainNode = window._CONTEXT.createGain()
         // gainNode.gain.value = tracks[trackIndex].params.gain;
         gainNode.gain.value = Math.pow(10, (tracks[trackIndex].params.gain/20));
-        console.log("=====", gainNode.gain.value)
         gainNode.connect(window._CONTEXT.destination)
 
         if (!rap.audioEl) return
@@ -124,7 +124,7 @@ export default ({ audioFile, color, trackIndex }) => {
             audioElement.currentTime = currentPlayTime - start_at
         }
     }, [start_at])
-
+    
     useEffect(() => {
         if (
             !loading &&
@@ -132,6 +132,15 @@ export default ({ audioFile, color, trackIndex }) => {
             currentPlayTime >= start_at &&
             currentPlayTime <= audioElement.duration + start_at
         ) {
+            // currentPlayTime = audioElement.currentTime + start_at
+            setCountTimeLine(countTimeLine + 1);
+            if(countTimeLine > 3){
+                setConfig({
+                    ...config,
+                    currentPlayTime: audioElement.currentTime + start_at,
+                })
+                setCountTimeLine(0)
+            }
             if (!audioFile.isPlaying) {
                 if (currentPlayTime > 0 && audioElement.currentTime == 0) {
                     audioElement.currentTime = currentPlayTime - start_at
@@ -147,7 +156,6 @@ export default ({ audioFile, color, trackIndex }) => {
     const updateCurrentTime = (position) => {
         audioElement.currentTime = position * audioElement.duration
     }
-
     const handleAudioListener = (currentTime) => {
         setAudioProgress((currentTime / audioElement.duration) * 100)
     }

@@ -29,6 +29,11 @@ export default ({ track }) => {
             }
                 : trackItem
         })
+        setPastQueue([...pastQueue, [{
+            ...tracks,
+            headIsMoving: false,
+            ...{type: "config",}
+        }]])
         setTracks(newTrack)
     }
 
@@ -70,8 +75,11 @@ export default ({ track }) => {
             }
                 : trackItem
         })
+        let tempTracks = [tracks];
+        tempTracks[0][0].type = "tracksconfig"
+        tempTracks[0][0].config = config
+        setPastQueue([...pastQueue, ...tempTracks])
         setTracks(newTrack)
-
         setConfig({
             ...config,
             solo: solo
@@ -81,13 +89,11 @@ export default ({ track }) => {
 
     const muteHandler = () => {
         if (config.solo && !track.params.solo) return
-
         let solo = false
         let newTrack = tracks.map((trackItem) => {
             if (track.id === trackItem.id) {
                 solo = solo || trackItem.params.solo
             }
-
             return track.id === trackItem.id ? {
                 ...trackItem,
                 params: {
@@ -98,8 +104,11 @@ export default ({ track }) => {
             }
                 : trackItem
         })
+        let tempTracks = [tracks];
+        tempTracks[0][0].type = "tracksconfig"
+        tempTracks[0][0].config = config
+        setPastQueue([...pastQueue, ...tempTracks])
         setTracks(newTrack)
-
         setConfig({
             ...config,
             solo: solo

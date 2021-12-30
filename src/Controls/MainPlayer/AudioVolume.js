@@ -8,6 +8,7 @@ export default () => {
         
         setPastQueue([...pastQueue, [{
             ...config,
+            headIsMoving: false,
             ...{type: "config",}
         }]])
         setConfig({
