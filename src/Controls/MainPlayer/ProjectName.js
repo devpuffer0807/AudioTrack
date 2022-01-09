@@ -9,7 +9,6 @@ export default () => {
             ...config,
             ...{type: "config",}
         }]])
-        console.log("==================",pastQueue)
         setConfig({
             ...config,
             name: event.target.value

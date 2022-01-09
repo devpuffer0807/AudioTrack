@@ -5,17 +5,23 @@ import { updateCurrentAudioTime, updateWaveFormWidth } from '../../States/States
 
 export default () => {
 
-    const { config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue } = useContext(PlayerContext)
-
+    const { config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue, firstUndoFlag, setFirstUndoFlag } = useContext(PlayerContext)
     const handler = () => {
         if(config.headIsMoving)
             return ;
         if (pastQueue.length > 0) {
-            // console.log("==========", futureQueue, pastQueue)
             switch (pastQueue.at(-1)[0].type) {
                 case "config":
+                    if(firstUndoFlag == true){
+                        setFutureQueue([...futureQueue, [{
+                            ...config,
+                            ...{type: "config",}
+                        }]])
+                        setFirstUndoFlag(false)
+                    }
+                    else
+                        setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     setConfig(pastQueue.at(-1)[0])
-                    setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     setPastQueue(pastQueue.slice(0, -1))
                     updateCurrentAudioTime(tracks, pastQueue.at(-1)[0].currentPlayTime, false)
                     setTracks(
@@ -23,14 +29,29 @@ export default () => {
                     )
                     break;
                 case "tracks":
+                    if(firstUndoFlag == true){
+                        let tempTracks = [tracks];
+                        tempTracks[0][0].type = "tracks"
+                        setFutureQueue([...futureQueue, ...tempTracks])
+                        setFirstUndoFlag(false)
+                    }
+                    else
+                        setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     setTracks(pastQueue.at(-1))
                     setPastQueue(pastQueue.slice(0, -1))
-                    setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     break;
                 case "tracksconfig":
+                    if(firstUndoFlag == true){
+                        let tempTracks = [tracks];
+                        tempTracks[0][0].type = "tracksconfig"
+                        tempTracks[0][0].config = config
+                        setFutureQueue([...futureQueue, ...tempTracks])
+                        setFirstUndoFlag(false)
+                    }
+                    else
+                        setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     setTracks(pastQueue.at(-1))
                     setPastQueue(pastQueue.slice(0, -1))
-                    setFutureQueue([...futureQueue, ...pastQueue.slice(-1)])
                     setConfig({
                         ...pastQueue.at(-1)[0].config,
                         headIsMoving: false,

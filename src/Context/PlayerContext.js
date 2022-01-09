@@ -9,6 +9,8 @@ const PlayerContextProvider = ({ children }) => {
     const [config, setConfig] = useState({})
     const [pastQueue, setPastQueue] = useState([])
     const [futureQueue, setFutureQueue] = useState([])
+    const [firstUndoFlag, setFirstUndoFlag] = useState(true)
+    const [firstRedoFlag, setFirstRedoFlag] = useState(true)
 
     useEffect(() => {
         let solo = false
@@ -56,7 +58,7 @@ const PlayerContextProvider = ({ children }) => {
 
     return (
         <PlayerContext.Provider
-            value={{ config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue }}
+            value={{ config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue, firstUndoFlag, setFirstUndoFlag, firstRedoFlag, setFirstRedoFlag }}
         >
             {children}
         </PlayerContext.Provider>

@@ -82,7 +82,7 @@ export default ({ audioFile, color, trackIndex }) => {
     }
 
     useEffect(() => {
-        console.log("============", tracks[trackIndex].params.gain, blobUrl)
+        //console.log("============", tracks[trackIndex].params.gain, blobUrl)
         drumPlay();
     }, [tracks[trackIndex].params.gain])
 

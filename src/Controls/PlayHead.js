@@ -30,6 +30,22 @@ export default ({ timelineScrollContainerElem }) => {
     }, [currentPlayTime, secondsPerBox])
 
     const updatePosition = (e) => {
+        // let audioFlag
+        // tracks.map((track, index) => (
+        //     track.audioFiles.map((audioFile) => (
+        //         audioFlag = !(audioFile.audioElement && audioFile.audioElement.duration > 0) ? false : true
+        //     ))
+        // ))
+        
+        let audioFlag = true
+        tracks.map((track, index) => (
+            track.audioFiles.map((audioFile) => (
+                audioFlag = audioFlag && (!(audioFile.audioElement && audioFile.audioElement.duration > 0) ? false : true)
+            ))
+        ))
+        
+        if(audioFlag == false)
+            return;
         const time = positionToTime({
             event: e,
             container: timelineScrollContainerElem,
@@ -49,7 +65,7 @@ export default ({ timelineScrollContainerElem }) => {
 
     const onMouseDownHandler = (e) => {
         updatePosition(e)
-        setMouseDrag(true)
+        // setMouseDrag(true)
     }
 
     const onMouseUpHandler = (e) => {

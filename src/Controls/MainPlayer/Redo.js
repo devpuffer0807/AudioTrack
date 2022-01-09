@@ -4,12 +4,13 @@ import { updateCurrentAudioTime, updateWaveFormWidth } from '../../States/States
 
 export default () => {
 
-    const { config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue } = useContext(PlayerContext)
-
+    const { config, setConfig, tracks, setTracks, pastQueue, futureQueue, setPastQueue, setFutureQueue, firstUndoFlag, setFirstUndoFlag } = useContext(PlayerContext)
+    const {firstUndo, setFirstUndo} = useState(true)
     const handler = () => {
         if (config.headIsMoving)
             return;
         if (futureQueue.length > 0) {
+            setFirstUndoFlag(true)
             switch (futureQueue.at(-1)[0].type) {
                 case "config":
                     setConfig(futureQueue.at(-1)[0])

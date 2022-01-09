@@ -80,6 +80,10 @@ export default () => {
 
     const snapHandler = () => {
         let snap = !config.snap
+        setPastQueue([...pastQueue, [{
+            ...config,
+            ...{type: "config",}
+        }]])
         setConfig({
             ...config,
             snap: snap
