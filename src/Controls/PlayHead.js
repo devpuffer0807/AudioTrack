@@ -6,6 +6,14 @@ import { timelineConfig } from '../config'
 import { playHeadTopStyle } from '../timeline/timelineStyle'
 import positionToTime from '../helpers/positionToTime'
 
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+  }
+
 export default ({ timelineScrollContainerElem }) => {
     const { tracks, config, setConfig, pastQueue, setPastQueue } = useContext(PlayerContext)
     const { secondsPerBox, currentPlayTime, headIsMoving } = config
@@ -14,6 +22,18 @@ export default ({ timelineScrollContainerElem }) => {
     const [mouseDrag, setMouseDrag] = useState(false)
     const [translateX, setTranslateX] = useState(0)
     const secondsRefreshValue = secondsPerBox / 100
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+    useEffect(() => {
+        function handleResize() {
+          setWindowDimensions(getWindowDimensions());
+        }
+    
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
+    
+
     useInterval(() => {
         if (!mouseDrag && headIsMoving) {
             // console.log(secondsRefreshValue)
@@ -29,6 +49,8 @@ export default ({ timelineScrollContainerElem }) => {
         setTranslateX(position - arrowWidth)
     }, [currentPlayTime, secondsPerBox])
 
+
+
     const updatePosition = (e) => {
         // let audioFlag
         // tracks.map((track, index) => (
@@ -36,6 +58,15 @@ export default ({ timelineScrollContainerElem }) => {
         //         audioFlag = !(audioFile.audioElement && audioFile.audioElement.duration > 0) ? false : true
         //     ))
         // ))
+
+        // console.log(e)
+
+        if(e.pageX < 265) {
+            return false;
+        }
+        if(e.pageX > (windowDimensions.width - 50)){
+            return false;
+        }
         
         let audioFlag = true
         tracks.map((track, index) => (
@@ -65,14 +96,14 @@ export default ({ timelineScrollContainerElem }) => {
 
     const onMouseDownHandler = (e) => {
         updatePosition(e)
-        // setMouseDrag(true)
+        setMouseDrag(true)
     }
 
     const onMouseUpHandler = (e) => {
         if (mouseDrag) {
             setMouseDrag(false)
         }
-        // setMouseDrag(true)
+        setMouseDrag(true)
     }
 
     const onMouseLeaveHandler = (e) => {
@@ -109,9 +140,9 @@ export default ({ timelineScrollContainerElem }) => {
                 className="playHead-top-line"
                 style={playHeadTopStyle}
                 onMouseDown={onMouseDownHandler}
-                // onMouseUp={onMouseUpHandler}
-                // onMouseLeave={onMouseLeaveHandler}
-                // onMouseMove={onMouseMoveHandler}
+                onMouseUp={onMouseUpHandler}
+                onMouseLeave={onMouseLeaveHandler}
+                onMouseMove={onMouseMoveHandler}
                 onDrag={onMouseDragHandler}
             />
             <div
@@ -119,8 +150,8 @@ export default ({ timelineScrollContainerElem }) => {
                 className="playHead"
                 onMouseDown={onMouseDownHandler}
                 onMouseUp={onMouseUpHandler}
-                // onMouseLeave={onMouseLeaveHandler}
-                // onMouseMove={onMouseMoveHandler}
+                onMouseLeave={onMouseLeaveHandler}
+                onMouseMove={onMouseMoveHandler}
                 onDrag={onMouseDragHandler}
             >
                 <div className="playHead-top" style={styles.playHeadTop} />
