@@ -53,6 +53,7 @@ export default () => {
     }
 
     const settingHandler = () => {
+        alert("ddd")
         if (document.getElementById('zoomSettingBar').classList.contains('display-none')) {
             document.getElementById('zoomSettingBar').classList.remove('display-none')
         } else {
@@ -79,6 +80,7 @@ export default () => {
     }
 
     const snapHandler = () => {
+        window.STEP_MARK = !window.STEP_MARK;
         let snap = !config.snap
         setPastQueue([...pastQueue, [{
             ...config,

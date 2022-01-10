@@ -1,41 +1,46 @@
 import React, { useEffect, useState, useContext } from 'react'
 import useInterval from '../helpers/useInterval'
-import { PlayerContext } from '../Context/PlayerContext'
+import { PlayerContext, config } from '../Context/PlayerContext'
 import { updateCurrentAudioTime } from '../States/States'
 import { timelineConfig } from '../config'
 import { playHeadTopStyle } from '../timeline/timelineStyle'
 import positionToTime from '../helpers/positionToTime'
+import { timelineBoxSize } from "../config"
 
 function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
-      width,
-      height
+        width,
+        height
     };
-  }
+}
+
+let renderTime = 0;
+let renderPageX = 0;
+let mouseDrag = false;
+let deltaX = 260
 
 export default ({ timelineScrollContainerElem }) => {
     const { tracks, config, setConfig, pastQueue, setPastQueue } = useContext(PlayerContext)
     const { secondsPerBox, currentPlayTime, headIsMoving } = config
     const { timelineBoxSize } = timelineConfig
     const arrowWidth = 10
-    const [mouseDrag, setMouseDrag] = useState(false)
     const [translateX, setTranslateX] = useState(0)
     const secondsRefreshValue = secondsPerBox / 100
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
     useEffect(() => {
         function handleResize() {
-          setWindowDimensions(getWindowDimensions());
+            setWindowDimensions(getWindowDimensions());
         }
-    
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-      }, []);
-    
+    }, []);
+
 
     useInterval(() => {
-        if (!mouseDrag && headIsMoving) {
+        if (headIsMoving) {
             // console.log(secondsRefreshValue)
             setConfig({
                 ...config,
@@ -52,40 +57,52 @@ export default ({ timelineScrollContainerElem }) => {
 
 
     const updatePosition = (e) => {
-        // let audioFlag
-        // tracks.map((track, index) => (
-        //     track.audioFiles.map((audioFile) => (
-        //         audioFlag = !(audioFile.audioElement && audioFile.audioElement.duration > 0) ? false : true
-        //     ))
-        // ))
+        let curTime = new Date().getTime();
+        if ((curTime - renderTime) < 50)
+            return false;
+        renderTime = curTime;
 
-        // console.log(e)
-
-        if(e.pageX < 265) {
+        if (Math.abs(renderPageX - e.pageX) < 5) {
             return false;
         }
-        if(e.pageX > (windowDimensions.width - 50)){
+
+        if (e.pageX < deltaX) {
             return false;
         }
-        
+        if (e.pageX > (windowDimensions.width - 50)) {
+            return false;
+        }
+
         let audioFlag = true
         tracks.map((track, index) => (
             track.audioFiles.map((audioFile) => (
                 audioFlag = audioFlag && (!(audioFile.audioElement && audioFile.audioElement.duration > 0) ? false : true)
             ))
         ))
-        
-        if(audioFlag == false)
+
+        if (audioFlag == false)
             return;
-        const time = positionToTime({
-            event: e,
-            container: timelineScrollContainerElem,
-            config: config,
-        })
+
+        let time = 0;
+        if (window.STEP_MARK) {
+            let boxCount = Math.floor((e.clientX - deltaX) / timelineBoxSize);
+            time = positionToTime({
+                event: { clientX: (boxCount * timelineBoxSize + deltaX) },
+                container: timelineScrollContainerElem,
+                config: config,
+            })
+        } else {
+            time = positionToTime({
+                event: e,
+                container: timelineScrollContainerElem,
+                config: config,
+            })
+        }
+
         setPastQueue([...pastQueue, [{
             ...config,
             headIsMoving: false,
-            ...{type: "config",}
+            ...{ type: "config", }
         }]])
         setConfig({
             ...config,
@@ -94,31 +111,41 @@ export default ({ timelineScrollContainerElem }) => {
         updateCurrentAudioTime(tracks, time, headIsMoving)
     }
 
-    const onMouseDownHandler = (e) => {
-        updatePosition(e)
-        setMouseDrag(true)
-    }
-
-    const onMouseUpHandler = (e) => {
-        if (mouseDrag) {
-            setMouseDrag(false)
+    const updateClickPosition = (e) => {
+        let time = 0;
+        if (window.STEP_MARK) {
+            let boxCount = Math.floor((e.clientX - deltaX) / timelineBoxSize);
+            time = positionToTime({
+                event: { clientX: (boxCount * timelineBoxSize + deltaX) },
+                container: timelineScrollContainerElem,
+                config: config,
+            })
+        } else {
+            time = positionToTime({
+                event: e,
+                container: timelineScrollContainerElem,
+                config: config,
+            })
         }
-        setMouseDrag(true)
+
+        setPastQueue([...pastQueue, [{
+            ...config,
+            headIsMoving: false,
+            ...{ type: "config", }
+        }]])
+        setConfig({
+            ...config,
+            currentPlayTime: time,
+        })
+        updateCurrentAudioTime(tracks, time, headIsMoving)
     }
 
-    const onMouseLeaveHandler = (e) => {
-        if (mouseDrag) {
-            setMouseDrag(false)
-        }
-    }
-
-    const onMouseMoveHandler = (e) => {
+    const onMouseDrag = (e) => {
+        return updatePosition(e)
+        mouseDrag = !mouseDrag;
         if (mouseDrag) {
             updatePosition(e)
         }
-    }
-    const onMouseDragHandler = (e) => {
-        updatePosition(e)
     }
 
     const styles = {
@@ -135,24 +162,19 @@ export default ({ timelineScrollContainerElem }) => {
     }
 
     return (
-        <div className="playHead-container">
+        <div className="playHead-container"
+            onClick={updateClickPosition}
+            style={{width: timelineConfig.timelineMinBoxNumbers*80}}
+        >
             <div
                 className="playHead-top-line"
                 style={playHeadTopStyle}
-                onMouseDown={onMouseDownHandler}
-                onMouseUp={onMouseUpHandler}
-                onMouseLeave={onMouseLeaveHandler}
-                onMouseMove={onMouseMoveHandler}
-                onDrag={onMouseDragHandler}
             />
             <div
                 style={styles.playHead}
                 className="playHead"
-                onMouseDown={onMouseDownHandler}
-                onMouseUp={onMouseUpHandler}
-                onMouseLeave={onMouseLeaveHandler}
-                onMouseMove={onMouseMoveHandler}
-                onDrag={onMouseDragHandler}
+                onDragEnd={() => { mouseDrag = false; }}
+                onDrag={onMouseDrag}
             >
                 <div className="playHead-top" style={styles.playHeadTop} />
                 <div
